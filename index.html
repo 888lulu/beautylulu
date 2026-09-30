@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>环球轻盈 · 少吃多睡打卡工作台</title>
+<title> 打卡工作台</title>
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Great+Vibes&family=Noto+Serif+SC:wght@400;500;600;700&display=swap">
 <style>
   :root{
@@ -485,6 +485,41 @@
   <button class="intro-skip" id="introSkip" type="button">Skip &rsaquo;</button>
 </div>
 
+<script>
+(function(){
+  var intro=document.getElementById('intro');
+  if(!intro) return;
+  var HOLD=10000, FADE=1150, timers=[];
+  function later(fn,ms){ var t=setTimeout(fn,ms); timers.push(t); }
+  function goQuote(){
+    intro.classList.remove('step-q'); intro.classList.add('step-quote');
+    later(goOut,HOLD);
+  }
+  function goOut(){
+    intro.classList.add('step-out');
+    later(function(){ intro.style.display='none'; },FADE);
+  }
+  function finish(){
+    timers.forEach(clearTimeout);
+    intro.classList.add('step-out');
+    setTimeout(function(){ intro.style.display='none'; },420);
+  }
+  var opts=intro.querySelectorAll('.intro-option'), i;
+  for(i=0;i<opts.length;i++){ opts[i].addEventListener('click',goQuote); }
+  document.getElementById('introSkip').addEventListener('click',finish);
+  intro.classList.add('step-q');
+  function bootMain(){
+    var lm=document.getElementById('lazyMain');
+    if(!lm){ later(bootMain,150); return; }
+    var sc=document.createElement('script');
+    sc.textContent=lm.textContent;
+    lm.parentNode.insertBefore(sc,lm.nextSibling);
+    lm.parentNode.removeChild(lm);
+  }
+  later(bootMain,450);
+})();
+</script>
+
 <!-- ===== 视图：首页 ===== -->
 <section data-route="home" class="active">
   <header class="hero">
@@ -561,7 +596,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="text/plain" id="lazyMain">
 (function(){
   'use strict';
 
@@ -2184,7 +2219,6 @@
   /* ============ 启动 ============ */
   var name = location.hash.replace(/^#\/?/,'').split('/')[0] || 'home';
   (routes[name]||routes.home)();
-  initIntro();
 })();
 </script>
 </body>
